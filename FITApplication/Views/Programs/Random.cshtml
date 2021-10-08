@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Random";
+}
+
+<h2>@Model.program.Name</h2>
+<h3>@Model.program.Price</h3>
+<img src="@Model.program.ImgUrl" />
+
+@{
+    int i = 0;
+    foreach (var client in Model.clients)
+    {
+        <a href="ShowClient\@i">@client.Name @client.Surname</a>
+        i++;
+    }
+}
+
