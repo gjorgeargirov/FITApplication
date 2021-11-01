@@ -8,6 +8,10 @@ namespace FITApplication.Models
 {
     public class Client
     {
+        public Client()
+        {
+            programs = new List<Program>();
+        }
         [Key]
         public int ClientID { get; set; }
         [Required]
@@ -15,13 +19,13 @@ namespace FITApplication.Models
         [Required]
         public string Surname { get; set; }
         [Required]
-        [Range(1, 99)]
+        [Range(8,99)]
         public int Age { get; set; }
         [Required]
-        public float Weight { get; set; }
+        public int Weight { get; set; }
         [Required]
-        public float Height { get; set; }
-
+        public int Height { get; set; }
         public string Email { get; set; }
+        public virtual ICollection<Program> programs { get; set; }
     }
 }

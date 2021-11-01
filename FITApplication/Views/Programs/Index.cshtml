@@ -4,42 +4,34 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="container">
+    <div class="mt-5">
+        <h5 class="d-inline">ALL PROGRAMS</h5>
+        @if ((User.IsInRole("Admin")) || (User.IsInRole("Trainer")))
+        {
+            <a href="/Programs/Create" class="float-end btn btn-outline-primary btn-sm">Create New</a>
+        }
+        </div>
+    <hr />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ImgUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            <img src="@item.ImgUrl" width="100px"/>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProgramID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProgramID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProgramID })
-        </td>
-    </tr>
-}
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-4 text-center">
+                <div class="card col-sm-6 col-md-3 m-3" style="width: 18rem;">
+                    <img class="card-img img-fluid" src="@item.ImgUrl" height="100" alt="Card image cap">
+                    <div class="card-body bg-secondary">
+                        <p class="card-text mt-1 text-white">
+                            Some quick example text to build on the card title and make up the
+                            bulk of the card's content.
+                        </p>
+                        <button class="btn btn-dark btn-sm px-5" onclick="location.href='/Programs/Details/@item.ProgramID';">@item.Name</button>
+                    </div>
+                </div>
 
-</table>
+            </div>
+        }
+    </div>
+    <hr />
+</div>

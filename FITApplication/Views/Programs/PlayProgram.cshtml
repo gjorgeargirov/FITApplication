@@ -1,0 +1,94 @@
+﻿@model FITApplication.Models.Program
+
+@{
+    ViewBag.Title = @Model.Name;
+}
+
+<div class="container">
+    <h5 class="mt-4">@Model.Name</h5>
+    <hr />
+
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <img id="gif" src="~/Content/ForContent/start.gif" class="border border-1 border-dark" />
+        </div>
+        <div class="col-sm-12 col-md-8 col-lg-6 text-center align-content-center my-5">
+            <div class="mt-5">
+                <img src="~/Content/svgIcons/stopwatch-solid.svg" width="24" class="pb-3" />
+                <h2 class="d-inline pb-2 px-2">|</h2>
+                <h2 class="d-inline"><span id="timer"></span></h2>
+            </div>
+            <div class="mt-1">
+                <img src="~/Content/svgIcons/burn-solid.svg" width="24" class="pb-3" />
+                <h2 class="d-inline pb-2 px-2">|</h2>
+                <h2 class="d-inline"><span id="burn"></span></h2>
+                <h2 class="value d-inline px-2" akhi="40">0</h2> cal
+            </div>
+
+            <br />
+            <br />
+            <a href="/Programs/Details/@Model.ProgramID" class="btn btn-outline-danger btn-sm px-5">Stop</a>
+            <a href="/Programs/Details/@Model.ProgramID" class="btn btn-outline-success btn-sm px-5">Next exercises</a>
+            <h6 class="float-start">Description</h6>
+            <p class="mt-2 px-2 border border-1 border-dark">
+                @Model.Description
+            </p>
+        </div>
+    </div>
+    <hr />
+</div>
+<script type="text/javascript">
+
+    const counters = document.querySelectorAll('.value');
+    const speed = 100;
+
+    counters.forEach(counter => {
+        const animate = () => {
+            const value = +counter.getAttribute('akhi');
+            const data = +counter.innerText;
+
+            const time = value / speed;
+            if (data < value) {
+                counter.innerText = Math.ceil(data + time);
+                setTimeout(animate, 1500);
+            } else {
+                counter.innerText = value;
+            }
+
+        }
+
+        animate();
+    });
+
+    document.getElementById('timer').innerHTML =
+        01 + ":" + 1;
+    startTimer();
+
+
+    function startTimer() {
+        var presentTime = document.getElementById('timer').innerHTML;
+        var timeArray = presentTime.split(/[:]+/);
+        var m = timeArray[0];
+        var s = checkSecond((timeArray[1] - 1));
+        if (m == 0 && s == 0) {
+            document.getElementById('gif').innerHTML = "Zavrsi";
+        }
+        if (s == 59) { m = m - 1 }
+        if (m < 0) {
+            return
+        }
+
+        document.getElementById('timer').innerHTML =
+            m + ":" + s;
+        setTimeout(startTimer, 1000);
+    }
+
+    function checkSecond(sec) {
+        if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+        if (sec < 0) { sec = "59" };
+        return sec;
+    }
+    
+    
+</script>
+

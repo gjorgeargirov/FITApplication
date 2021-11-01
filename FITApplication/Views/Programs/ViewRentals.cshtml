@@ -1,0 +1,43 @@
+﻿@model FITApplication.Models.Program
+
+@{
+    ViewBag.Title = "ViewRentals";
+}
+<div class="container">
+    <div class="mt-5">
+        <h5 class="d-inline">@Model.Name RENTALS</h5>
+        <hr />
+    </div>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.clients)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <a href="/Clients/Details/@item.ClientID">Details</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <a href="/Programs/Details/@Model.ProgramID" class="btn btn-outline-danger my-4">Back</a>
+</div>

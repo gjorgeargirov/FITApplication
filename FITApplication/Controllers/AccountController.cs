@@ -7,10 +7,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FITApplication.Models;
+using System.Collections.Generic;
 
 namespace FITApplication.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -77,14 +77,14 @@ namespace FITApplication.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index","Programs");
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Invalid password or email.");
                     return View(model);
             }
         }
@@ -132,7 +132,26 @@ namespace FITApplication.Controllers
             }
         }
 
-        //
+        public ActionResult AddUserToRole()
+        {
+            AddToRoleModel model = new AddToRoleModel();
+            model.Roles = new List<string>() { "Admin", "Trainer", "User" };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AddUserToRole(AddToRoleModel model)
+        {
+            var email = model.Email;
+            var user = UserManager.FindByEmail(email);
+            if(user == null)
+            {
+                throw new HttpException(404, "There is no user with email " + email);
+            }
+            UserManager.AddToRole(user.Id, model.SelectedRole);
+            return RedirectToAction("Index", "Programs");
+        }
+
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -150,26 +169,22 @@ namespace FITApplication.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Name, Email = model.Email, PhoneNumber = db.clients.Count().ToString() };
+                var client = new Client();
+                client.Name = model.Name;
+                client.Surname = model.Surname;
+                client.Email = model.Email;
+                client.Age = model.Age;
+                client.Weight = model.Weight;
+                client.Height = model.Height;
+                db.clients.Add(client);
+                db.SaveChanges();
+                var client_ID = db.clients.Max(p => p.ClientID);
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email , PhoneNumber = client_ID.ToString() };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
-                { 
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    var client = new Client();
-                    client.Name = model.Name;
-                    client.Surname = model.Surname;
-                    client.Email = model.Email;
-                    client.Age = model.Age;
-                    client.Weight = model.Weight;
-                    client.Height = model.Height;
-                    db.clients.Add(client);
-                    db.SaveChanges();
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+                {
+                    await UserManager.AddToRoleAsync(user.Id, RoleName.User);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Programs");
                 }
                 AddErrors(result);

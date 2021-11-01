@@ -10,9 +10,9 @@ using FITApplication.Models;
 
 namespace FITApplication.Controllers
 {
-    [Authorize]
     public class ManageController : Controller
     {
+        private ProgramsContext db = new ProgramsContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -72,6 +72,7 @@ namespace FITApplication.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            ViewBag.client = db.clients.Find(int.Parse(model.PhoneNumber));
             return View(model);
         }
 

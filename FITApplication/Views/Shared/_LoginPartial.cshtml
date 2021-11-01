@@ -1,22 +1,59 @@
 ﻿@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
+    <a href="@Url.Action("Index","Programs")" class="navbar-brand">
+        F<img src="~/Content/svgIcons/dumbbell-solid.svg" width="22" style="color: white; transform: rotate(90deg);" />T
+    </a>
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
-
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+        @Html.AntiForgeryToken()<ul class="navbar-nav mx-auto">
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item mx-1 pt-1">
+                    <a href="@Url.Action("Index","Clients")" class="navbar-brand">
+                        <p class="d-inline" style="font-size:10px;">All clients</p>
+                        <img src="~/Content/svgIcons/users-solid.svg" width="20" />
+                    </a>
+                </li>
+            }
+            <li class="nav-item mx-1 pt-1">
+                <a href="@Url.Action("Index","Programs")" class="navbar-brand">
+                    <p class="d-inline" style="font-size:10px;">My programs</p>
+                    <img src="~/Content/svgIcons/male-solid.svg" width="20" />
+                </a>
+            </li>
+            <li class="nav-item mx-1 pt-1">
+                <a href="@Url.Action("Index","Programs")" class="navbar-brand">
+                    <p class="d-inline" style="font-size:10px;">Workouts</p>
+                    <img src="~/Content/svgIcons/running-solid.svg" width="20" />
+                </a>
+            </li>
+            <li class="nav-item dropstart">
+                <a class="nav-link " href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <p class="d-inline text-white" style="font-size:10px;">Accout</p>
+                    <img src="~/Content/svgIcons/user-icon.svg" width="20" />
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="@Url.Action("Index","Manage")">Account settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                </ul>
+            </li>
+        </ul>
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    <a href="@Url.Action("Index","Home")" class="navbar-brand">
+        F<img src="~/Content/svgIcons/dumbbell-solid.svg" width="22" style="color: white; transform: rotate(90deg);" />T
+    </a>
+    <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+            <button class="btn btn-outline-secondary btn-sm px-5 text-white"
+                    onclick="location.href='@Url.Action("Login","Account")'" ;">
+                LOGIN
+            </button>
+        </li>
     </ul>
+    <a class="navbar-text text-right text-light text-decoration-none" href="@Url.Action("About","Home")">About us</a>
 }

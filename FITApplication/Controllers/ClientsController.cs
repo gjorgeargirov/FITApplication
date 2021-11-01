@@ -10,7 +10,6 @@ using FITApplication.Models;
 
 namespace FITApplication.Controllers
 {
-    [Authorize]
     public class ClientsController : Controller
     {
         private ProgramsContext db = new ProgramsContext();
@@ -56,13 +55,13 @@ namespace FITApplication.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClientID,Name,Surname,Age,Weight,Height")] Client client)
+        public ActionResult Edit([Bind(Include = "ClientID,Name,Surname,Age,Weight,Height,Email")] Client client)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Manage");
             }
             return View(client);
         }

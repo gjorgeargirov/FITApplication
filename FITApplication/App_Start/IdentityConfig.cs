@@ -40,6 +40,12 @@ namespace FITApplication
         {
         }
 
+        internal static string GetPhoneNumber(string userId)
+        {
+            
+            throw new NotImplementedException();
+        }
+
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));

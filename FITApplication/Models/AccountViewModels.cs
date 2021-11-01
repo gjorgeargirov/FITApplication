@@ -90,10 +90,10 @@ namespace FITApplication.Models
         public int Age { get; set; }
 
         [Required]
-        public float Weight { get; set; }
+        public int Weight { get; set; }
 
         [Required]
-        public float Height { get; set; }
+        public int Height { get; set; }
     }
 
     public class ResetPasswordViewModel

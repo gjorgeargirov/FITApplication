@@ -1,42 +1,45 @@
 ﻿@model FITApplication.Models.Program
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Program";
 }
 
-<h2>Details</h2>
+<div class="container">
+    <div class="mt-5">
+        <h5 class="d-inline">@Model.Name</h5>
+        <div class="d-inline float-end">
+            @if ((User.IsInRole("Admin")) || (User.IsInRole("Trainer")))
+            {
+                <a href="/Programs/ViewRentals/@Model.ProgramID" class="btn btn-outline-primary btn-sm">View rentals</a>
+                @Html.ActionLink("Edit", "Edit", "Programs", new { id = @Model.ProgramID }, new { @class = "btn btn-outline-success btn-sm px-3" })
+                @Html.ActionLink("Delete", "Delete", "Programs", new { id = @Model.ProgramID }, new { @class = "btn btn-outline-danger btn-sm mx-1" })
+            }
+        </div>
+        <hr />
+    </div>
+    <div class="row text-center align-content-center my-5">
 
-<div>
-    <h4>Program</h4>
+        <div class="col">
+            <img src="@Model.ImgUrl" width="300" />
+        </div>
+        <div class="col mt-3">
+            <p class="border border-1 border-dark py-3 px-5">
+                @Model.Description
+            </p>
+            @if (ViewBag.Rent != null)
+            {
+                <a href="/Programs/Index" class="btn btn-outline-danger btn-sm px-5 mt-3">Back     </a>
+                <a href="/Programs/PlayProgram/@Model.ProgramID" class="btn btn-outline-success btn-sm px-5 mt-3">Strat workout  </a>
+                <p class="mt-2">Program create by: <span class="text-danger">@Model.Creator.</span></p>
+            }
+            else
+            {
+                <h5 class="d-inline">Cost:<span class="text-danger"> $@Model.Price/month.</span></h5><br />
+                <a href="/Programs/Index" class="btn btn-outline-danger btn-sm px-5 mt-3">Back     </a>
+                <a href="/Programs/InsertNewClient/@Model.ProgramID" class="btn btn-outline-success btn-sm px-3 mt-3">Pay for program</a>
+                <p class="mt-2">Program create by: <span class="text-danger">@Model.Creator.</span></p>
+            }
+        </div>
+    </div>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ImgUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ImgUrl)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProgramID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
